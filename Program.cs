@@ -11,6 +11,7 @@ List<Cliente> listaClientesDeletados = new List<Cliente>();
 //var database = new Database();
 //database.Create();
 
+
 string opcao;
 
 do
@@ -242,6 +243,4 @@ class Cliente
         this.Idade = idade;
     }
 }
-
-//pq eu tenho que declarar a lista antes da classe?
 //explicar namespace
