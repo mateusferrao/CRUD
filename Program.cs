@@ -7,11 +7,6 @@ using System.Reflection.Metadata;
 List<Cliente> listaClientes = new List<Cliente>();
 List<Cliente> listaClientesDeletados = new List<Cliente>();
 
-//List<int> lista = new List<int>();
-//var database = new Database();
-//database.Create();
-
-
 string opcao;
 
 do
