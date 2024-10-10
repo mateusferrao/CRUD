@@ -20,7 +20,7 @@ do
             CadastrarUsuario();
             break;
         case "2":
-            ListarUsuarios();
+            ListarUsuariosAtivos();
             break;
         case "3":
             ListarUsuariosDeletados();
@@ -68,7 +68,16 @@ int buscarIdade()
 
 int GeraId()
 {
-        return listaClientes.Count + 1;
+    if (listaClientes.Count == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        int id = listaClientes.Max(x => x.Id);
+        return id;
+    }
+        
 }
 
 void AdicionaUsuario(int id, string nome, int idade)
@@ -82,8 +91,14 @@ void AdicionaUsuario(int id, string nome, int idade)
 
 void CadastrarUsuario()
 {
-    Console.WriteLine("Nome: ");
-    string nome = Console.ReadLine();
+    string nome;
+    do
+    {
+        Console.WriteLine("Nome: ");
+        nome = Console.ReadLine();
+        if (nome == "") Console.WriteLine("Digite um nome válido");
+    } while (nome == "");
+    
 
     int idade = buscarIdade();
 
@@ -92,38 +107,37 @@ void CadastrarUsuario()
     AdicionaUsuario(id, nome, idade);
 }
 
-void ListarUsuarios()
+void ListarUsuarios(List<Cliente> lista)
 {
-    if (listaClientes.Count != 0)
+    if (lista.Count != 0)
     {
-        for (int i = 0; i < listaClientes.Count; i++)
+        for (int i = 0; i < lista.Count; i++)
         {
-            Console.WriteLine($"ID: {listaClientes[i].Id}; Nome: {listaClientes[i].Nome}; Idade: {listaClientes[i].Idade}\n");
+            Console.WriteLine($"ID: {lista[i].Id}; Nome: {lista[i].Nome}; Idade: {lista[i].Idade}\n");
         }
     }
     else
     {
-        Console.WriteLine("Ainda não existem usuários cadastrados!\n");
+        Console.WriteLine("Ainda não existem usuários!\n");
     }
+}
+
+void ListarUsuariosAtivos()
+{
+    ListarUsuarios(listaClientes);
 }
 
 void ListarUsuariosDeletados()
 {
-    if (listaClientesDeletados.Count != 0)
-    {
-        for (int i = 0; i < listaClientesDeletados.Count; i++)
-        {
-            Console.WriteLine($"ID: {listaClientesDeletados[i].Id}; Nome: {listaClientesDeletados[i].Nome}; Idade: {listaClientesDeletados[i].Idade}\n");
-        }
-    }
-    else
-    {
-        Console.WriteLine("Ainda não existem usuários deletados!\n");
-    }
+    ListarUsuarios(listaClientesDeletados);
 }
 
 void BuscarUsuario()
 {
+    void ListaUsuarioEncontrado(Cliente usuario)
+    {
+        Console.WriteLine($"ID: {usuario.Id}; Nome: {usuario.Nome}; Idade: {usuario.Idade}\n");
+    }
     Console.WriteLine("Por qual parâmetro deseja localizar?\n1-ID\n2-Nome\n3-Idade");
     string a = Console.ReadLine();
     int.TryParse(a, out int parametro);
@@ -151,8 +165,7 @@ void BuscarUsuario()
             {
                 int.TryParse(b, out id);
                 Cliente idEncontrado = listaClientes.Find(x => x.Id == id);
-                Console.WriteLine($"ID: {idEncontrado.Id}; Nome: {idEncontrado.Nome}; Idade: {idEncontrado.Idade}\n");
-            }
+                ListaUsuarioEncontrado(idEncontrado);            }
             else
             {
                 Console.WriteLine("Usuário não encontrado!");
@@ -165,7 +178,7 @@ void BuscarUsuario()
             if (listaClientes.Exists(x => x.Nome.Contains(nome)))
             {
                 Cliente nomeEncontrado = listaClientes.Find(x => x.Nome.Contains(nome));
-                Console.WriteLine($"ID: {nomeEncontrado.Id}; Nome: {nomeEncontrado.Nome}; Idade: {nomeEncontrado.Idade}\n");
+                ListaUsuarioEncontrado(nomeEncontrado);
             }
             else
             {
@@ -192,7 +205,7 @@ void BuscarUsuario()
             {
                 int.TryParse(c, out idade);
                 Cliente idadeEncontrada = listaClientes.Find(x => x.Id == idade);
-                Console.WriteLine($"ID: {idadeEncontrada.Id}; Nome: {idadeEncontrada.Nome}; Idade: {idadeEncontrada.Idade}\n");
+                ListaUsuarioEncontrado(idadeEncontrada);
             }
             else
             {
@@ -207,7 +220,7 @@ void BuscarUsuario()
 
 void DeletarUsuario()
 {
-    ListarUsuarios();
+    ListarUsuariosAtivos();
     Console.WriteLine("Digite o ID do usuário a ser deletado: ");
     string a = Console.ReadLine();
     int.TryParse(a,out int id);
